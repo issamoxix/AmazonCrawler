@@ -1,12 +1,11 @@
 from requests_html import HTMLSession
-# url = "https://www.amazon.com/international-sales-offers/b/?ie=UTF8&node=15529609011&ref_=nav_cs_gb_intl_52df97a2eee74206a8343034e85cd058&nocache=1626714612342"
-# url2 = f"https://www.amazon.com/international-sales-offers/b/ref=gbps_ftr_m-9_475e_page_{page}?node=15529609011&nocache=1626714612342/&gb_f_deals1=dealStates:AVAILABLE%252CWAITLIST%252CWAITLISTFULL%252CEXPIRED%252CSOLDOUT%252CUPCOMING,page:{page},sortOrder:BY_SCORE,MARKETING_ID:ship_export,dealsPerPage:32&pf_rd_p=5d86def2-ec10-4364-9008-8fbccf30475e&pf_rd_s=merchandised-search-9&pf_rd_t=101&pf_rd_i=15529609011&pf_rd_m=ATVPDKIKX0DER&pf_rd_r=6D45Q7N5YJREGC19R32Z&ie=UTF8#next"
-
-class Crawler:
-    def __init__(self):
+import pandas as pd
+class Crawler:    
+    def Start(self,test,debugg=False):
         self.maxPage = 33
         self.Bag = []
-    def Start(self,test,debugg=False):
+        self.title = []
+        self.price = []
         self.testPage = test
         self.Debugg = debugg
         if self.Debugg:
@@ -35,6 +34,8 @@ class Crawler:
 
             #append objects to the data array 
             data.append({'title':r_title,'price':r_price, 'image':r_image,'link':r_href})
+            self.title.append(r_title)
+            self.price.append(r_price)
         return data
 
     #Parse Page in the same session
@@ -42,6 +43,7 @@ class Crawler:
         session = HTMLSession()
         r =  session.get(url)
         r.html.render(sleep=1)
+        print('Status Code : ',r.status_code)
         products = r.html.xpath('//*[@id="widgetContent"]')[0]
         items = products.find('div')
         return  self.Bag.append(self.GetData(items))
@@ -53,11 +55,17 @@ class Crawler:
                 print(f'Page n{i}')
             page = i
             url = f"https://www.amazon.com/international-sales-offers/b/ref=gbps_ftr_m-9_475e_page_{page}?node=15529609011&nocache=1626714612342/&gb_f_deals1=dealStates:AVAILABLE%252CWAITLIST%252CWAITLISTFULL%252CEXPIRED%252CSOLDOUT%252CUPCOMING,page:{page},sortOrder:BY_SCORE,MARKETING_ID:ship_export,dealsPerPage:32&pf_rd_p=5d86def2-ec10-4364-9008-8fbccf30475e&pf_rd_s=merchandised-search-9&pf_rd_t=101&pf_rd_i=15529609011&pf_rd_m=ATVPDKIKX0DER&pf_rd_r=6D45Q7N5YJREGC19R32Z&ie=UTF8#next"
-            print(url)
             try:
                 self.ParsePage(url)
             except:
+                print('[Error] Cant ParsePage')
                 pass
         if self.Debugg:
-            print(self.Bag)
+            print('Bag : ',len(self.Bag))
+            print('Title : ',len(self.title))
+            print('Price : ',len(self.price))
+            pd.DataFrame({'Title':self.title,'Price':self.price}).to_csv('data.csv',index_label=False)
         return self.Bag
+
+crw = Crawler()
+crw.Start(2,True) 
