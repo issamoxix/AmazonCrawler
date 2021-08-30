@@ -99,6 +99,7 @@ class Crawler:
         return self.Bag
 
 crw = Crawler()
+print('# There is 16 Per Page')
 pages = input('Enter Number of Pages : ')
 crw.Start(1+int(pages),True) 
 print('Data has been saved in the data.csv file !')
