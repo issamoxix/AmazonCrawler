@@ -1,49 +1,80 @@
 from requests_html import HTMLSession
 import pandas as pd
+import sys
+
 class Crawler:    
     def Start(self,test,debugg=False):
         self.maxPage = 33
         self.Bag = []
         self.title = []
         self.price = []
+        self.link = []
         self.testPage = test
         self.Debugg = debugg
         if self.Debugg:
             return self.ParseAll(self.testPage)
         else:
             return self.ParseAll(self.maxPage)
-        
+    def CheckVariable(self,item,xpath):
+        try:
+            return item.xpath(xpath)
+        except:
+            return ['No Data']
+    def CheckElement(self,item,label):
+        try:
+            return item[0].attrs[label]
+        except:
+            return 'No Data'
+    def CheckText(self,item):
+        try:
+            return item[0].text
+        except:
+            return 'No Data'
     def GetData(self,items):
         data = []
         for i in items:
             #select by xpath the items
-            price = i.xpath('//div/div[2]/div/div/div[3]/div[1]/span')
-            image = i.xpath('//*[@id="dealImage"]/div/div/div[1]/img')
-            title = i.xpath('//*[@id="dealTitle"]/span')
-            href = i.xpath('//*[@id="dealTitle"]')
+            price = self.CheckVariable(i,'//div/div[2]/div/div/div[3]/div[1]/span')
+            image = self.CheckVariable(i,'//*[@id="dealImage"]/div/div/div[1]/img')
+            title = self.CheckVariable(i,'//*[@id="dealTitle"]/span')
+            href = self.CheckVariable(i,'//*[@id="dealTitle"]')
+            
+            # price = i.xpath('//div/div[2]/div/div/div[3]/div[1]/span')
+            # image = i.xpath('//*[@id="dealImage"]/div/div/div[1]/img')
+            # title = i.xpath('//*[@id="dealTitle"]/span')
+            # href = i.xpath('//*[@id="dealTitle"]')
 
             #check if items empty 
-            if len(price) ==0 or len(image)==0 or len(title)==0 or len(href)==0:
-                continue
+            try:
+                if '100_dealView' not in i.attrs['id']:
+                    continue
+            except:
+                if len(price) ==0 or len(image)==0 or len(title)==0 or len(href)==0:
+                    continue
 
             #get the raw data aka innerHTML/TEXT
-            r_href = href[0].attrs['href']
-            r_title = title[0].text
-            r_price = price[0].text
-            r_image = image[0].attrs['src']
+            r_href = self.CheckElement(href,'href')
+            r_image = self.CheckElement(image,'src')
+            r_title = self.CheckText(title)
+            r_price = self.CheckText(price)
+            # r_href = href[0].attrs['href'] if href[0].attrs else 'No Link'
+            # r_image = image[0].attrs['src'] if image[0].attrs['src'] else 'No Image'
+            # r_title = title[0].text if title[0].text else 'No Title'
+            # r_price = price[0].text if price[0].text else 'No Price'
 
             #append objects to the data array 
             data.append({'title':r_title,'price':r_price, 'image':r_image,'link':r_href})
             self.title.append(r_title)
             self.price.append(r_price)
+            self.link.append(r_href)
         return data
 
     #Parse Page in the same session
     def ParsePage(self, url):
         session = HTMLSession()
         r =  session.get(url)
-        r.html.render(sleep=1)
-        print('Status Code : ',r.status_code)
+        r.html.render(sleep=1,scrolldown=3,keep_page=True,wait=1)
+        # print('Status Code : ',r.status_code)
         products = r.html.xpath('//*[@id="widgetContent"]')[0]
         items = products.find('div')
         return  self.Bag.append(self.GetData(items))
@@ -64,8 +95,8 @@ class Crawler:
             print('Bag : ',len(self.Bag))
             print('Title : ',len(self.title))
             print('Price : ',len(self.price))
-            pd.DataFrame({'Title':self.title,'Price':self.price}).to_csv('data.csv',index_label=False)
+        pd.DataFrame({'Title':self.title,'Price':self.price,'Link':self.link}).to_csv('data.csv',index_label=False)
         return self.Bag
 
 crw = Crawler()
-crw.Start(2,True) 
+crw.Start(3,True) 
