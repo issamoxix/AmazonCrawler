@@ -85,18 +85,20 @@ class Crawler:
             if self.Debugg:
                 print(f'Page n{i}')
             page = i
-            url = f"https://www.amazon.com/international-sales-offers/b/ref=gbps_ftr_m-9_475e_page_{page}?node=15529609011&nocache=1626714612342/&gb_f_deals1=dealStates:AVAILABLE%252CWAITLIST%252CWAITLISTFULL%252CEXPIRED%252CSOLDOUT%252CUPCOMING,page:{page},sortOrder:BY_SCORE,MARKETING_ID:ship_export,dealsPerPage:32&pf_rd_p=5d86def2-ec10-4364-9008-8fbccf30475e&pf_rd_s=merchandised-search-9&pf_rd_t=101&pf_rd_i=15529609011&pf_rd_m=ATVPDKIKX0DER&pf_rd_r=6D45Q7N5YJREGC19R32Z&ie=UTF8#next"
+            url = f"https://www.amazon.com/international-sales-offers/b/ref=gbps_ftr_m-9_475e_page_{page}?node=15529609011&nocache=1626714612342/&gb_f_deals1=dealStates:AVAILABLE%252CWAITLIST%252CWAITLISTFULL%252CEXPIRED%252CSOLDOUT%252CUPCOMING,page:{page},sortOrder:BY_SCORE,MARKETING_ID:ship_export,dealsPerPage:60&pf_rd_p=5d86def2-ec10-4364-9008-8fbccf30475e&pf_rd_s=merchandised-search-9&pf_rd_t=101&pf_rd_i=15529609011&pf_rd_m=ATVPDKIKX0DER&pf_rd_r=6D45Q7N5YJREGC19R32Z&ie=UTF8#next"
             try:
                 self.ParsePage(url)
             except:
                 print('[Error] Cant ParsePage')
                 pass
-        if self.Debugg:
-            print('Bag : ',len(self.Bag))
-            print('Title : ',len(self.title))
-            print('Price : ',len(self.price))
+        # if self.Debugg:
+        #     print('Bag : ',len(self.Bag))
+        #     print('Title : ',len(self.title))
+        #     print('Price : ',len(self.price))
         pd.DataFrame({'Title':self.title,'Price':self.price,'Link':self.link}).to_csv('data.csv',index_label=False)
         return self.Bag
 
 crw = Crawler()
-crw.Start(3,True) 
+pages = input('Enter Number of Pages : ')
+crw.Start(1+int(pages),True) 
+print('Data has been saved in the data.csv file !')
