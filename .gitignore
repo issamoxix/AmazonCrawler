@@ -1,4 +1,5 @@
 test.ipynb
 data.csv
 test.py
-./__pycache__
+*.pyc
+*.pyo

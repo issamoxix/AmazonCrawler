@@ -2,6 +2,7 @@ from main import Crawler
 from fastapi import FastAPI
 from requests_html import AsyncHTMLSession
 from typing import Optional
+import json
 
 app = FastAPI()
 
@@ -18,3 +19,6 @@ async def ScrapeData(pages:Optional[int]= 1):
         items = widget.find('div')
         crawle.GetData(items)
     return crawle.data
+@app.get('/test')
+def TestFunc():
+    return {'Hi there':'keep testing !!'}
