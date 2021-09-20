@@ -2,6 +2,7 @@ FROM python:3
 
 COPY . .
 
-RUN python -m pip install requests-html
+RUN python -m  pip install  -r requirements.txt
 
-CMD python test.py
+
+CMD uvicorn server:app --reload
