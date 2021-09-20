@@ -6,7 +6,10 @@ import json
 
 app = FastAPI()
 
-
+#get requests will scrape the data from the amazon daily 
+#will return json response
+#/?pages = 1 how many page want to scrape 
+#keep it empty just (/) for the first page only
 @app.get('/')
 async def ScrapeData(pages:Optional[int]= 1):
     crawle = Crawler()
@@ -19,6 +22,8 @@ async def ScrapeData(pages:Optional[int]= 1):
         items = widget.find('div')
         crawle.GetData(items)
     return crawle.data
+
+
 @app.get('/test')
 def TestFunc():
     return {'Hi there':'keep testing !!'}
