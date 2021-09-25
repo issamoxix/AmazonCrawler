@@ -2,7 +2,6 @@ from main import Crawler
 from fastapi import FastAPI
 from requests_html import AsyncHTMLSession
 from typing import Optional
-import json
 
 app = FastAPI()
 

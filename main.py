@@ -1,6 +1,5 @@
 #to save in a .csv file just create data frame and append the lists like the snippet bellow
 # pd.DataFrame({'Title':self.title,'Price':self.price,'Link':self.link}).to_csv('data.csv',index_label=False)
-from requests_html import AsyncHTMLSession
 
 
 class Crawler:    
