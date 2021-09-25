@@ -8,6 +8,10 @@ Scrape Today's Deal page using requests_html python
   pip install  -r requirements.txt
 ```
 
+## Doc
+
+Check docs in localhost:8000/docs
+
 ## Host api in Local for (dev)
 
 ```
