@@ -3,3 +3,4 @@ data.csv
 test.py
 *.pyc
 *.pyo
+test.*
