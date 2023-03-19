@@ -3,6 +3,7 @@ import threading
 from helpers import *
 
 
+# TODO def save_data_to_db
 # TODO refactor the code
 
 async def main():
@@ -19,7 +20,7 @@ async def main():
         image_url = get_attr(image_elem, "src")
         title = get_attr(image_elem, "alt")
         print("[EXTRACTING] ", title)
-        threading.Thread(await download_image(extracting_name, title, image_url, key))
+        threading.Thread(await save_image(extracting_name, title, image_url, key))
         item_url = get_attr(item.find("a")[1], "href")
         product_checker = [int(pattern in item_url) for pattern in not_product]
         product_checker = list(set(product_checker))
