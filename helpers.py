@@ -1,4 +1,3 @@
-import asyncio
 import datetime
 from requests_html import AsyncHTMLSession
 import os
@@ -27,8 +26,8 @@ def get_text(elem, default_val=""):
     return elem.text if elem else default_val
 
 
-def get_item_details(id, url, ITEMS_DICT):
-    response = asyncio.run(get_response(url, sleep=0))
+async def get_item_details(id, url, ITEMS_DICT):
+    response = await get_response(url, sleep=0)
     dom = response.html
     item_name = get_text(selector(dom, "h1#title"))
     feature_bullets = get_text(
@@ -57,8 +56,8 @@ def extracting_meta():
     return extracting_detail
 
 
-def save_image(folder, file_name, url, id):
-    response = asyncio.run(get_response(url, sleep=0))
+async def save_image(folder, file_name, url, id):
+    response = await get_response(url, sleep=0)
     file_name = file_name.replace('"', "")
     file_name = f"{file_name.replace('/','_')}_id=[{id}]"
     with open(f"{folder}/{file_name}.jpg", "wb") as image:
