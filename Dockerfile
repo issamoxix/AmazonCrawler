@@ -25,7 +25,7 @@ COPY requirements.txt /app/
 RUN pip install -r requirements.txt
 
 # Copy the rest of the application files
-COPY . /app/
+COPY /crawler/. /app/
 
 # Start the application
 CMD ["python", "main.py"]

@@ -1,6 +1,6 @@
 import asyncio
 import threading
-from helpers import *
+from utils.helpers import *
 
 
 # TODO refactor the code

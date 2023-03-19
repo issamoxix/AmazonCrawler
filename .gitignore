@@ -5,3 +5,4 @@ test.py
 *.pyo
 test.*
 extracting_*
+__pycache__
