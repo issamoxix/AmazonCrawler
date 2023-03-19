@@ -56,9 +56,13 @@ def extracting_meta():
     return extracting_detail
 
 
-async def save_image(folder, file_name, url, id):
+async def download_image(folder, file_name, url, id):
     response = await get_response(url, sleep=0)
     file_name = file_name.replace('"', "")
     file_name = f"{file_name.replace('/','_')}_id=[{id}]"
     with open(f"{folder}/{file_name}.jpg", "wb") as image:
         image.write(response.content)
+
+async def save_data_to_db(items_dict):
+    # TODO: Implement saving items_dict to a database
+    pass
